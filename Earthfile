@@ -1,5 +1,5 @@
 build:
-      FROM golang:1.18 # start with go
+      FROM golang:1.19 # start with go
       WORKDIR /app # change workdir
 
       COPY main.go go.mod go.sum . # copy files
