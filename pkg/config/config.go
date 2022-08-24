@@ -4,6 +4,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/hcl"
@@ -39,10 +40,29 @@ func Load(paths ...string) (*koanf.Koanf, error) {
 	for _, path := range paths {
 		err = k.Load(file.Provider(path), hcl.Parser(false))
 		if err != nil {
+			if os.IsNotExist(err) {
+				fmt.Fprintf(os.Stderr, "config.Load: File %q not found", path)
+				continue
+			}
 			return nil, fmt.Errorf("config.Load: %w", err)
 		}
 	}
 
-	fmt.Printf("%#v\n", k.Raw())
-	return nil, nil
+	return k, nil
+}
+
+type Config struct {
+	Mode  string
+	Debug bool
+}
+
+// config.UnmarshalConfig: unmarshal koanf config
+func UnmarshalConfig(k *koanf.Koanf) (*Config, error) {
+	var config Config
+	err := k.Unmarshal("", &config)
+	if err != nil {
+		return nil, fmt.Errorf("config.UnmarshallConfig: %w", err)
+	}
+
+	return &config, nil
 }
