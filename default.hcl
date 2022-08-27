@@ -1,4 +1,4 @@
 mode = "dev"
-debug = true
+debug = false
 thing3 = "hi2"
 thing2 = "hi2"

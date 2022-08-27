@@ -1,9 +1,6 @@
 package main
 
-import (
-	"github.com/uwindsorcss/site/pkg/start"
-)
-
 func main() {
-	start.Run()
+	s, _ := InjectDependencies()
+	s.Log.Debugf("%#v", s.Config)
 }

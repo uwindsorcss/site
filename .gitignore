@@ -1,3 +1,4 @@
 site
 config.hcl
 pkg/config/default.hcl
+wire_gen.go

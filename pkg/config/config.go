@@ -12,6 +12,20 @@ import (
 	"github.com/knadh/koanf/providers/fs"
 )
 
+func ProvideConfig() (*Config, error) {
+	k, err := Load("config.hcl")
+	if err != nil {
+		return nil, fmt.Errorf("config.InitConfig: %w", err)
+	}
+
+	c, err := UnmarshalConfig(k)
+	if err != nil {
+		return nil, fmt.Errorf("config.InitConfig: %w", err)
+	}
+
+	return c, nil
+}
+
 // errors
 var (
 	ErrEmptyPathList = errors.New("empty paths list")

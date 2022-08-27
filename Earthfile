@@ -2,11 +2,15 @@ build:
       FROM golang:1.19 # start with go
       WORKDIR /app # change workdir
 
-      COPY main.go go.mod go.sum . # copy files
+      COPY main.go wire.go go.mod go.sum . # copy files
       COPY --dir pkg/ vendor/ ./ # copy dirs
 
-      COPY default.hcl . # copy config
-      RUN go generate ./...
+      RUN go install github.com/google/wire/cmd/wire@latest; \
+          wire ./wire.go;
 
-      RUN go build -mod=vendor -o site main.go # build  with vendoring
+      COPY default.hcl . # copy config
+      RUN go generate ./...;\
+          rm wire.go # gets in the way of building
+
+      RUN go build -mod=vendor -o site . # build  with vendoring
       SAVE ARTIFACT site AS LOCAL site # save file
