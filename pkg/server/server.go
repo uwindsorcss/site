@@ -16,7 +16,13 @@ type Server struct {
 }
 
 func ProvideServer(l *zap.SugaredLogger, c *config.Config) Server {
-	r := gin.Default()
+	if !c.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
+
+	r := gin.New()
 
 	s := Server{
 		Log:    l,
